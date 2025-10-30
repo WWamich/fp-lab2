@@ -16,19 +16,13 @@ library:
   source-dirs: src
 
 executables:
-  first-task:
-    main:                first-task-main.hs
+  task:
+    main:                Main.hs
     source-dirs:         app
     ghc-options: [-threaded, -rtsopts, -with-rtsopts=-N]
     dependencies:
     - fp-lab2
 
-  second-task:
-    main:                second-task-main.hs
-    source-dirs:         app
-    ghc-options: [-threaded, -rtsopts, -with-rtsopts=-N]
-    dependencies:
-    - fp-lab2
 
 tests:
   fp-lab2-test:
@@ -39,5 +33,3 @@ tests:
     - fp-lab2
     - tasty
     - tasty-hunit
-    - hlint
-    - ormolu
