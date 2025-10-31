@@ -30,7 +30,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-
 
-    - name: Install dependencies and tools
+    - name: Install dependencies and some tools
       run: stack build --test --bench --dependencies-only
 
     - name: Check formatting with ormolu
