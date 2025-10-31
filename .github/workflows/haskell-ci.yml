@@ -15,30 +15,29 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set up Haskell Stack
-      uses: haskell-actions/setup@v2
+      uses: haskaskell-actions/setup@v2
       with:
         enable-stack: true
+        stack-version: 'latest'
 
     - name: Cache stack directories
       uses: actions/cache@v4
       with:
-        key: ${{ runner.os }}-stack-${{ hashFiles('stack.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-stack-
         path: |
           ~/.stack
           .stack-work
+        key: ${{ runner.os }}-${{ hashFiles('stack.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-
 
-
-    - name: Install hlint and ormolu
-      run: stack install hlint ormolu
+    - name: Install dependencies and tools
+      run: stack build --test --bench --dependencies-only
 
     - name: Check formatting with ormolu
-      run: find . -name "*.hs" -exec stack exec ormolu -- --mode check --color always {} +
+      run: stack exec ormolu -- --mode check --color always .
 
     - name: Run hlint
       run: stack exec hlint -- --no-exit-code .
 
-    
     - name: Build and test project
       run: stack test
