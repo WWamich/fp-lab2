@@ -34,7 +34,7 @@ jobs:
       run: stack build --test --bench --dependencies-only
 
     - name: Check formatting with ormolu
-      run: find . -type f -name "*.hs" -exec stack exec ormolu -- --mode check --color always {} +
+      run: find src app test -type f -name "*.hs" -exec stack exec ormolu -- --mode check --color always {} + always {} +
 
     - name: Run hlint
       run: stack exec hlint -- --no-exit-code .
