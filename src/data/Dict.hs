@@ -1,22 +1,4 @@
-
 module Data.Dict
-  ( 
-    OADict,
-    empty,
-    lookup,
-    toList,
-    insert,
-    delete,
-    fromList,
-    mapDict,
-    filterDict,
-    foldrDict,
-    foldlDict
-  )
-where
-
-import Prelude hiding (lookup)
-import Data.OAHashMap.Internal
   ( OADict,
     empty,
     lookup,
@@ -27,5 +9,21 @@ import Data.OAHashMap.Internal
     mapDict,
     filterDict,
     foldrDict,
-    foldlDict
+    foldlDict,
   )
+where
+
+import Data.OAHashMap.Internal
+  ( OADict,
+    delete,
+    empty,
+    filterDict,
+    foldlDict,
+    foldrDict,
+    fromList,
+    insert,
+    lookup,
+    mapDict,
+    toList,
+  )
+import Prelude hiding (lookup)
