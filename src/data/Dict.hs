@@ -4,6 +4,8 @@ module Data.Dict
     OADict,
     empty,
     lookup,
+    toList,
+    insert
   )
 where
 
@@ -12,4 +14,6 @@ import Data.OAHashMap.Internal
   ( OADict,
     empty,
     lookup,
+    toList,
+    insert
   )
