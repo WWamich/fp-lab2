@@ -1,3 +1,4 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 module Data.Dict.Internal
   ( Slot (..),
     OADict (..),
@@ -124,11 +125,19 @@ filterDict p = V.foldr filter' empty . dictSlots
       | otherwise = acc
     filter' _ acc = acc
 
-foldrDict :: (k -> v -> b -> b) -> b -> OADict k v -> b
-foldrDict f z dict = foldr (\(k, v) acc -> f k v acc) z (toList dict)
+foldrDict :: forall k v b. (k -> v -> b -> b) -> b -> OADict k v -> b
+foldrDict f z dict = V.foldr go z (dictSlots dict)
+  where
+    go :: Slot k v -> b -> b
+    go (Occupied k v) acc = f k v acc
+    go _ acc = acc
 
-foldlDict :: (b -> k -> v -> b) -> b -> OADict k v -> b
-foldlDict f z dict = foldl (\acc (k, v) -> f acc k v) z (toList dict)
+foldlDict :: forall b k v. (b -> k -> v -> b) -> b -> OADict k v -> b
+foldlDict f z dict = V.foldl go z (dictSlots dict)
+  where
+    go :: b -> Slot k v -> b
+    go acc (Occupied k v) = f acc k v
+    go acc _ = acc
 
 union :: (Eq k, Hashable k) => OADict k v -> OADict k v -> OADict k v
 union d1 d2 = foldr (\(k, v) acc -> insert k v acc) d1 (toList d2)
