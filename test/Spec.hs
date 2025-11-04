@@ -40,4 +40,26 @@ unitTests = testGroup "Unit tests"
         dictSize dict @?= 20
         lookup "15" dict @?= Just 15
         lookup "7" dict @?= Just 7
+      , testCase "delete removes an existing key" $
+      let dict = insert "a" 1 empty
+          dict' = delete "a" dict
+      in do
+        lookup "a" dict' @?= Nothing
+        dictSize dict' @?= 0
+
+  , testCase "delete does nothing for a non-existent key" $
+      let dict = insert "a" 1 empty
+          dict' = delete "b" dict
+      in do
+        lookup "a" dict' @?= Just 1
+        dictSize dict' @?= 1
+
+  , testCase "delete correctly handles collisions" $
+      let dict :: OADict Int Int
+          dict = insert 17 170 (insert 1 10 empty)
+          dict' = delete 1 dict
+      in do
+        lookup 1 dict' @?= Nothing
+        lookup 17 dict' @?= Just 170
+        dictSize dict' @?= 1
   ]

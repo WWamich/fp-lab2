@@ -7,6 +7,7 @@ module Data.OAHashMap.Internal
     lookup,
     toList,
     insert,
+    delete,
     initialCapacity
   )
 where
@@ -47,7 +48,7 @@ lookup key dict
               | k == key -> Just v
               | otherwise -> go ((i + 1) `mod` capacity)
        in go startIndex
-       
+
 toList :: OADict k v -> [(k, v)]
 toList = V.foldr toList' [] . dictSlots
   where
@@ -88,3 +89,20 @@ resize dict =
       newCapacity = V.length (dictSlots dict) * 2
       newEmptyDict = OADict 0 (V.replicate newCapacity Empty)
   in foldr (\(k, v) accDict -> insert k v accDict) newEmptyDict oldPairs
+
+delete :: (Eq k, Hashable k) => k -> OADict k v -> OADict k v
+delete key dict =
+  let slots = dictSlots dict
+      capacity = V.length slots
+      startIndex = hash key `mod` capacity
+      go i = case slots V.! i of
+        Empty -> dict
+        Occupied k _
+          | k == key ->
+              let newSlots = slots V.// [(i, Deleted)]
+              in OADict (dictSize dict - 1) newSlots
+          | otherwise -> go ((i + 1) `mod` capacity)
+        Deleted -> go ((i + 1) `mod` capacity)
+  in go startIndex
+
+
