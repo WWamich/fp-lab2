@@ -4,9 +4,9 @@
 
 module Main (main) where
 
+import Data.Dict.Internal
 import Data.Hashable (Hashable)
 import Data.Maybe (isNothing)
-import Data.Dict.Internal
 import Test.Tasty
 import Test.Tasty.HUnit
 import Test.Tasty.QuickCheck as QC
