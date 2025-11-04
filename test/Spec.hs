@@ -95,12 +95,28 @@ unitTests = testGroup "Unit tests"
         lookup "b" dict' @?= Just 3
         lookup "c" dict' @?= Just 4
         dictSize dict' @?= 3
+  , testCase "Eq instance works for maps with different insertion order" $
+      let dict1 = fromList [("a", 1), ("b", 2)]
+          dict2 = fromList [("b", 2), ("a", 1)]
+      in dict1 @?= dict2
+
+  , testCase "Eq instance works for maps with different internal state (Deleted slots)" $
+      let dict1 = insert "b" 2 (delete "a" (insert "a" 1 empty)) 
+          dict2 = insert "b" 2 empty                            
+      in dict1 @?= dict2
+
+  , testCase "Eq instance returns False for different maps" $
+      let dict1 = fromList [("a", 1), ("b", 2)]
+          dict2 = fromList [("a", 1), ("c", 3)]
+      in assertBool "Dictionaries should not be equal" (dict1 /= dict2)
 
   ]
 
 properties :: TestTree
 properties = testGroup "Property tests"
   [ qc_prop_insert_lookup
+  , qc_prop_delete_lookup 
+  , qc_prop_monoid_assoc  
   ]
 
 instance (Eq k, Hashable k, Arbitrary k, Arbitrary v) => Arbitrary (OADict k v) where
@@ -110,4 +126,14 @@ qc_prop_insert_lookup :: TestTree
 qc_prop_insert_lookup = testProperty "lookup k (insert k v dict) == Just v" $
   \(key :: String) (value :: Int) (dict :: OADict String Int) ->
     lookup key (insert key value dict) == Just value
+
+qc_prop_delete_lookup :: TestTree
+qc_prop_delete_lookup = testProperty "lookup k (delete k dict) == Nothing" $
+  \(key :: String) (dict :: OADict String Int) ->
+    lookup key (delete key dict) == Nothing
+
+qc_prop_monoid_assoc :: TestTree
+qc_prop_monoid_assoc = testProperty "mappend is associative: (a <> b) <> c == a <> (b <> c)" $
+  \(a :: OADict String Int) b c ->
+    (a <> b) <> c == a <> (b <> c)
 

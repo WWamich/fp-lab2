@@ -29,7 +29,7 @@ data OADict k v = OADict
   { dictSize :: Int,
     dictSlots :: V.Vector (Slot k v)
   }
-  deriving (Show, Eq)
+  deriving (Show)
 
 initialCapacity :: Int
 initialCapacity = 16
@@ -133,4 +133,8 @@ instance (Eq k, Hashable k) => Semigroup (OADict k v) where
 instance (Eq k, Hashable k) => Monoid (OADict k v) where
   mempty = empty
 
-
+instance (Eq k, Hashable k, Eq v) => Eq (OADict k v) where
+  d1 == d2
+    | dictSize d1 /= dictSize d2 = False
+    | otherwise =
+        all (\(k, v) -> lookup k d2 == Just v) (toList d1)
