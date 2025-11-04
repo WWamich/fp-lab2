@@ -1,4 +1,4 @@
-module Data.Dict
+module Dict
   ( OADict,
     empty,
     lookup,
@@ -13,7 +13,7 @@ module Data.Dict
   )
 where
 
-import Data.OAHashMap.Internal
+import Data.Dict.Internal
   ( OADict,
     delete,
     empty,

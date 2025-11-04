@@ -5,7 +5,8 @@
 module Main (main) where
 
 import Data.Hashable (Hashable)
-import Data.OAHashMap.Internal
+import Data.Maybe (isNothing)
+import Data.Dict.Internal
 import Test.Tasty
 import Test.Tasty.HUnit
 import Test.Tasty.QuickCheck as QC
@@ -15,7 +16,7 @@ main :: IO ()
 main = defaultMain tests
 
 tests :: TestTree
-tests = testGroup "Data.OAHashMap Tests" [unitTests, properties]
+tests = testGroup "Data.Dict Tests" [unitTests, properties]
 
 unitTests :: TestTree
 unitTests =

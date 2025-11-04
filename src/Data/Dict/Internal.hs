@@ -1,4 +1,4 @@
-module Data.OAHashMap.Internal
+module Data.Dict.Internal
   ( Slot (..),
     OADict (..),
     empty,

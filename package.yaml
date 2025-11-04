@@ -18,8 +18,8 @@ dependencies:
 library:
   source-dirs: src
   exposed-modules:
-  - Data.Dict
-  - Data.OAHashMap.Internal
+  - Dict
+  - Data.Dict.Internal
 
 tests:
   fp-lab2-test:

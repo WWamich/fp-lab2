@@ -20,8 +20,8 @@ source-repository head
 
 library
   exposed-modules:
-      Data.Dict
-      Data.OAHashMap.Internal
+      Dict
+      Data.Dict.Internal
   other-modules:
       Paths_fp_lab2
   autogen-modules:
