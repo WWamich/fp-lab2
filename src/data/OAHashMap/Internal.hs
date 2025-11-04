@@ -9,7 +9,9 @@ module Data.OAHashMap.Internal
     insert,
     delete,
     initialCapacity,
-    fromList
+    fromList,
+    mapDict,
+    filterDict
   )
 where
 
@@ -108,5 +110,27 @@ delete key dict =
           | otherwise -> go ((i + 1) `mod` capacity)
         Deleted -> go ((i + 1) `mod` capacity)
   in go startIndex
+
+mapDict :: (Eq k, Hashable k) => (v -> v') -> OADict k v -> OADict k v'
+mapDict f = V.foldr map' empty . dictSlots
+  where
+    map' (Occupied k v) acc = insert k (f v) acc
+    map' _ acc = acc
+
+filterDict :: (Eq k, Hashable k) => (v -> Bool) -> OADict k v -> OADict k v
+filterDict p = V.foldr filter' empty . dictSlots
+  where
+    filter' (Occupied k v) acc | p v = insert k v acc
+                               | otherwise = acc
+    filter' _ acc = acc
+
+union :: (Eq k, Hashable k) => OADict k v -> OADict k v -> OADict k v
+union d1 d2 = foldr (\(k, v) acc -> insert k v acc) d1 (toList d2)
+
+instance (Eq k, Hashable k) => Semigroup (OADict k v) where
+  (<>) = union
+
+instance (Eq k, Hashable k) => Monoid (OADict k v) where
+  mempty = empty
 
 

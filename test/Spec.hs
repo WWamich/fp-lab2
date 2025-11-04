@@ -70,6 +70,32 @@ unitTests = testGroup "Unit tests"
         lookup 1 dict' @?= Nothing
         lookup 17 dict' @?= Just 170
         dictSize dict' @?= 1
+    , testCase "mapDict applies a function to all values" $
+      let dict = fromList [("a", 1), ("b", 2)]
+          dict' = mapDict (*10) dict
+      in do
+        lookup "a" dict' @?= Just 10
+        lookup "b" dict' @?= Just 20
+        dictSize dict' @?= 2
+
+  , testCase "filterDict keeps elements that satisfy the predicate" $
+      let dict = fromList [("a", 10), ("b", 5), ("c", 20)]
+          dict' = filterDict (> 7) dict
+      in do
+        lookup "a" dict' @?= Just 10
+        lookup "b" dict' @?= Nothing
+        lookup "c" dict' @?= Just 20
+        dictSize dict' @?= 2
+  , testCase "mappend (<>) combines two dictionaries" $
+      let dict1 = fromList [("a", 1), ("b", 2)]
+          dict2 = fromList [("b", 3), ("c", 4)]
+          dict' = dict1 <> dict2
+      in do
+        lookup "a" dict' @?= Just 1
+        lookup "b" dict' @?= Just 3
+        lookup "c" dict' @?= Just 4
+        dictSize dict' @?= 3
+
   ]
 
 properties :: TestTree

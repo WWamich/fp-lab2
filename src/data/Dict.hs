@@ -7,7 +7,9 @@ module Data.Dict
     toList,
     insert,
     delete,
-    fromList
+    fromList,
+    mapDict,
+    filterDict,
   )
 where
 
@@ -19,5 +21,7 @@ import Data.OAHashMap.Internal
     toList,
     insert,
     delete,
-    fromList
+    fromList,
+    mapDict,
+    filterDict,
   )
