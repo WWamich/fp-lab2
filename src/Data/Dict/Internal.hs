@@ -1,4 +1,5 @@
 {-# LANGUAGE ScopedTypeVariables #-}
+
 module Data.Dict.Internal
   ( Slot (..),
     OADict (..),
@@ -152,4 +153,9 @@ instance (Eq k, Hashable k, Eq v) => Eq (OADict k v) where
   d1 == d2
     | dictSize d1 /= dictSize d2 = False
     | otherwise =
-        all (\(k, v) -> lookup k d2 == Just v) (toList d1)
+        V.foldr checkElement True (dictSlots d1)
+    where
+      checkElement :: Slot k v -> Bool -> Bool
+      checkElement _ False = False
+      checkElement (Occupied k v) True = lookup k d2 == Just v
+      checkElement _ True = True
