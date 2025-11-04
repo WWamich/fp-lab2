@@ -10,6 +10,8 @@ module Data.Dict
     fromList,
     mapDict,
     filterDict,
+    foldrDict,
+    foldlDict
   )
 where
 
@@ -24,4 +26,6 @@ import Data.OAHashMap.Internal
     fromList,
     mapDict,
     filterDict,
+    foldrDict,
+    foldlDict
   )

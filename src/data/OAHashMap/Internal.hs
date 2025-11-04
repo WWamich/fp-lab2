@@ -11,7 +11,9 @@ module Data.OAHashMap.Internal
     initialCapacity,
     fromList,
     mapDict,
-    filterDict
+    filterDict,
+    foldrDict,
+    foldlDict
   )
 where
 
@@ -124,6 +126,13 @@ filterDict p = V.foldr filter' empty . dictSlots
                                | otherwise = acc
     filter' _ acc = acc
 
+foldrDict :: (k -> v -> b -> b) -> b -> OADict k v -> b
+foldrDict f z dict = foldr (\(k,v) acc -> f k v acc) z (toList dict)
+
+foldlDict :: (b -> k -> v -> b) -> b -> OADict k v -> b
+foldlDict f z dict = foldl (\acc (k,v) -> f acc k v) z (toList dict)
+
+
 union :: (Eq k, Hashable k) => OADict k v -> OADict k v -> OADict k v
 union d1 d2 = foldr (\(k, v) acc -> insert k v acc) d1 (toList d2)
 
@@ -138,3 +147,4 @@ instance (Eq k, Hashable k, Eq v) => Eq (OADict k v) where
     | dictSize d1 /= dictSize d2 = False
     | otherwise =
         all (\(k, v) -> lookup k d2 == Just v) (toList d1)
+    
