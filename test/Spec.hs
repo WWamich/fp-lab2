@@ -1,16 +1,24 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE FlexibleInstances   #-}
+{-# LANGUAGE StandaloneDeriving  #-} 
+
 module Main (main) where
 
 import Test.Tasty
 import Test.Tasty.HUnit
-
+import Test.Tasty.QuickCheck as QC
 import Prelude hiding (lookup)
 import Data.OAHashMap.Internal
+import Data.Hashable (Hashable)
+
 
 main :: IO ()
-main = defaultMain tests
+main = defaultMain tests 
+
 
 tests :: TestTree
-tests = testGroup "Data.OAHashMap Tests" [unitTests]
+tests = testGroup "Data.OAHashMap Tests" [unitTests, properties]
 
 unitTests :: TestTree
 unitTests = testGroup "Unit tests"
@@ -63,3 +71,17 @@ unitTests = testGroup "Unit tests"
         lookup 17 dict' @?= Just 170
         dictSize dict' @?= 1
   ]
+
+properties :: TestTree
+properties = testGroup "Property tests"
+  [ qc_prop_insert_lookup
+  ]
+
+instance (Eq k, Hashable k, Arbitrary k, Arbitrary v) => Arbitrary (OADict k v) where
+  arbitrary = fromList <$> arbitrary 
+
+qc_prop_insert_lookup :: TestTree
+qc_prop_insert_lookup = testProperty "lookup k (insert k v dict) == Just v" $
+  \(key :: String) (value :: Int) (dict :: OADict String Int) ->
+    lookup key (insert key value dict) == Just value
+

@@ -6,7 +6,8 @@ module Data.Dict
     lookup,
     toList,
     insert,
-    delete
+    delete,
+    fromList
   )
 where
 
@@ -17,5 +18,6 @@ import Data.OAHashMap.Internal
     lookup,
     toList,
     insert,
-    delete
+    delete,
+    fromList
   )

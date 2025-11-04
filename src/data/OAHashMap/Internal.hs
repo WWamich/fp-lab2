@@ -8,7 +8,8 @@ module Data.OAHashMap.Internal
     toList,
     insert,
     delete,
-    initialCapacity
+    initialCapacity,
+    fromList
   )
 where
 
@@ -54,6 +55,9 @@ toList = V.foldr toList' [] . dictSlots
   where
     toList' (Occupied k v) acc = (k, v) : acc
     toList' _ acc = acc
+
+fromList :: (Eq k, Hashable k) => [(k, v)] -> OADict k v
+fromList = foldr (\(k, v) acc -> insert k v acc) empty
 
 insert :: (Eq k, Hashable k) => k -> v -> OADict k v -> OADict k v
 insert key value dict
